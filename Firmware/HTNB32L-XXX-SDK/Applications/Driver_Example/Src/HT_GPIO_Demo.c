@@ -58,7 +58,6 @@ static void HT_GPIO_Callback(void) {
   if (HT_GPIO_GetInterruptFlags(BUTTON_INSTANCE) & (1 << BUTTON_PIN)) {
       gpio_exti ^= 1;
       HT_GPIO_ClearInterruptFlags(BUTTON_INSTANCE, 1 << BUTTON_PIN);
-      delay_us(10000000);
   }
 
   HT_GPIO_RestoreIRQMask(BUTTON_INSTANCE, portIrqMask);
@@ -109,10 +108,14 @@ void HT_GPIO_App(void) {
 
   while(1) {
 
-      if (gpio_exti)
-        HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_ON);
-      else
+      if (gpio_exti){
+        ht_printf("led ON");
         HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_OFF);
+      }
+      else{
+        ht_printf("LED OFF");
+        HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_ON);
+      }
       
   }
 }
