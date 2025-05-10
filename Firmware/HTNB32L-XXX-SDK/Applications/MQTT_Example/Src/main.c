@@ -21,6 +21,10 @@
 #include "HT_gpio_qcx212.h"
 #include "ic_qcx212.h"
 #include "HT_ic_qcx212.h"
+#include "queue.h"
+
+QueueHandle_t xFila;
+
 
 static uint32_t uart_cntrl = (ARM_USART_MODE_ASYNCHRONOUS | ARM_USART_DATA_BITS_8 | ARM_USART_PARITY_NONE | 
                                 ARM_USART_STOP_BITS_1 | ARM_USART_FLOW_CONTROL_NONE);
@@ -72,20 +76,55 @@ static void HT_GPIO_InitLed(void) {
   GPIO_InitStruct.exti = GPIO_EXTI_DISABLED;
 
   HT_GPIO_Init(&GPIO_InitStruct);
+  HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_OFF);
 }
 
-void Task1(void *pvParameters) {
+
+void vTaskleitura(void *pvParameters) {
+    bool estado_atual, estado_anterior = false;
+    uint32_t ultimaInteracao = 0;
+    int cliques = 0;
+
     while (1) {
-        button_state = (bool) HT_GPIO_PinRead(BUTTON_INSTANCE, BUTTON_PIN);
-        vTaskDelay(pdMS_TO_TICKS(50));
+        estado_atual = !(bool) HT_GPIO_PinRead(BUTTON_INSTANCE, BUTTON_PIN);
+
+        if (estado_atual && !estado_anterior) {
+            cliques++;
+            ultimaInteracao = xTaskGetTickCount();
+            printf("Clique detectado! Total: %d\n", cliques);
+        }
+
+        estado_anterior = estado_atual;
+
+        // Verifica se passou 2s desde o último clique
+        if (cliques > 0 && (xTaskGetTickCount() - ultimaInteracao > pdMS_TO_TICKS(2000))) {
+            // Envia total de cliques para a fila
+            xQueueSend(xFila, &cliques, portMAX_DELAY);
+            cliques = 0; // Zera contador
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
+void vTaskLED(void *pvParameters) {
+    int total_cliques;
 
-void Task2(void *pvParameters) {
-    while (1)
-    {   
-        HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, button_state);
-        vTaskDelay(pdMS_TO_TICKS(50));
+
+    while (1) {
+        if (xQueueReceive(xFila, &total_cliques, portMAX_DELAY)) {
+            printf("Total de cliques recebidos: %d\n", total_cliques);
+
+            // Exemplo de ação: piscar LED X vezes
+            for (int i = 0; i < total_cliques; i++) {
+                HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_OFF);
+                vTaskDelay(pdMS_TO_TICKS(1000));
+                HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_ON);
+                vTaskDelay(pdMS_TO_TICKS(1000));
+            }
+
+            // Ou outro comportamento, como ligar/desligar LED se total for par/ímpar
+            // HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, total_cliques % 2);
+        }
     }
 }
 
@@ -99,11 +138,20 @@ void main_entry(void) {
     HT_GPIO_InitLed();
     slpManNormalIOVoltSet(IOVOLT_3_30V);
 
-    HAL_USART_InitPrint(&huart1, GPR_UART1ClkSel_26M, uart_cntrl, 115200);
-    printf("Exemplo FreeRTOS-desafio\n");
+    xFila = xQueueCreate(10, sizeof(int));
 
-    xTaskCreate(Task1, "Blink", 128, NULL, 1, NULL);
-    xTaskCreate(Task2, "Print", 128, NULL, 1, NULL);
+if (xFila == NULL)
+{
+  printf("erro ao criar a fila\n");
+  while(1);
+}
+
+
+    HAL_USART_InitPrint(&huart1, GPR_UART1ClkSel_26M, uart_cntrl, 115200);
+    printf("Exemplo FreeRTOS-atividade 4\n");
+
+    xTaskCreate(vTaskleitura, "Blink", 128, NULL, 1, NULL);
+    xTaskCreate(vTaskLED, "Print", 128, NULL, 2, NULL);
 
     vTaskStartScheduler();
     
