@@ -37,7 +37,8 @@
         "ht_uart_api.h": "c",
         "ht_timer_demo.h": "c",
         "ht_usart_unilog.h": "c",
-        "*.conf": "bitbake"
+        "*.conf": "bitbake",
+        "freertos.h": "c"
     },
     "python.autoComplete.extraPaths": [
         "${workspaceFolder}/sources/poky/bitbake/lib",

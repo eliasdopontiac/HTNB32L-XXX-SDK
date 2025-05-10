@@ -15,6 +15,7 @@
 
 #include "HT_GPIO_Demo.h"
 
+
 static volatile uint8_t gpio_exti = 0;
 
 /*!******************************************************************
@@ -109,7 +110,7 @@ void HT_GPIO_App(void) {
   while(1) {
 
       if (gpio_exti){
-        ht_printf("led ON");
+        ht_printf("Botão");
         HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_OFF);
       }
       else{
