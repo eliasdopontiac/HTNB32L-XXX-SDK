@@ -163,7 +163,7 @@ typedef enum
 
 typedef enum
 {
-    WAKEUP_FROM_POR,
+    WAKEUP_FROM__POR,
     WAKEUP_FROM_RTC,
     WAKEUP_FROM_PAD,
 }slpManWakeSrc_e;
@@ -251,7 +251,7 @@ typedef enum
 
 typedef enum
 {
-	// @ 1.8V level£¬ make sure LDOIO33_18_SEL Pin is high
+	// @ 1.8V levelï¿½ï¿½ make sure LDOIO33_18_SEL Pin is high
 	IOVOLT_1_65V = 0,
 	IOVOLT_1_70V,
 	IOVOLT_1_75V,
