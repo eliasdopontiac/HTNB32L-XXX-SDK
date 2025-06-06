@@ -16,16 +16,11 @@
 #include "main.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "slpman_qcx212.h"
-#include "pad_qcx212.h"
-#include "HT_gpio_qcx212.h"
-#include "ic_qcx212.h"
-#include "HT_ic_qcx212.h"
-#include "queue.h"
+//#include "queue.h"
 #include "semphr.h"
+#include <stdbool.h>
 
-
-QueueHandle_t xFila;
+#define USART_BUFFER_SIZE 100
 
 
 static uint32_t uart_cntrl = (ARM_USART_MODE_ASYNCHRONOUS | ARM_USART_DATA_BITS_8 | ARM_USART_PARITY_NONE | 
@@ -33,95 +28,103 @@ static uint32_t uart_cntrl = (ARM_USART_MODE_ASYNCHRONOUS | ARM_USART_DATA_BITS_
 
 extern USART_HandleTypeDef huart1;
 
-//GPIO10 - BUTTON
-#define BUTTON_INSTANCE          0                  /**</ Button pin instance. */
-#define BUTTON_PIN               10                 /**</ Button pin number. */
-#define BUTTON_PAD_ID            25                 /**</ Button Pad ID. */
-#define BUTTON_PAD_ALT_FUNC      PAD_MuxAlt0        /**</ Button pin alternate function. */
+static uint8_t rx_buffer[USART_BUFFER_SIZE] = {0};
+uint8_t controlByte[1] = {0};
 
-//GPIO3 - LED
-#define LED_INSTANCE             0                  /**</ LED pin instance. */
-#define LED_GPIO_PIN             3                  /**</ LED pin number. */
-#define LED_PAD_ID               14                 /**</ LED Pad ID. */
-#define LED_PAD_ALT_FUNC         PAD_MuxAlt0        /**</ LED pin alternate function. */
-
-#define LED_ON  1                                   /**</ LED on. */
-#define LED_OFF 0                                   /**</ LED off. */
-
-volatile bool button_state = false;
-
-static void HT_GPIO_InitButton(void) {
-  GPIO_InitType GPIO_InitStruct = {0};
-
-  GPIO_InitStruct.af = PAD_MuxAlt0;
-  GPIO_InitStruct.pad_id = BUTTON_PAD_ID;
-  GPIO_InitStruct.gpio_pin = BUTTON_PIN;
-  GPIO_InitStruct.pin_direction = GPIO_DirectionInput;
-  GPIO_InitStruct.pull = PAD_InternalPullUp;
-  GPIO_InitStruct.instance = BUTTON_INSTANCE;
-  GPIO_InitStruct.exti = GPIO_EXTI_DISABLED;
-  GPIO_InitStruct.interrupt_config = GPIO_InterruptFallingEdge;
-
-  HT_GPIO_Init(&GPIO_InitStruct);
-}
-
-static void HT_GPIO_InitLed(void) {
-  GPIO_InitType GPIO_InitStruct = {0};
-
-  GPIO_InitStruct.af = PAD_MuxAlt0;
-  GPIO_InitStruct.pad_id = LED_PAD_ID;
-  GPIO_InitStruct.gpio_pin = LED_GPIO_PIN;
-  GPIO_InitStruct.pin_direction = GPIO_DirectionOutput;
-  GPIO_InitStruct.init_output = 0;
-  GPIO_InitStruct.pull = PAD_AutoPull;
-  GPIO_InitStruct.instance = LED_INSTANCE;
-  GPIO_InitStruct.exti = GPIO_EXTI_DISABLED;
-
-  HT_GPIO_Init(&GPIO_InitStruct);
-  HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_OFF);
-}
-
-
-// Crie o semáforo binário
+QueueHandle_t xFilaFrequencia;
 SemaphoreHandle_t xSemaforo;
-volatile int total_cliques = 0;
+SemaphoreHandle_t xUartRxSemaphore;
 
-void vTaskleitura(void *pvParameters) {
-    bool estado_atual, estado_anterior = false;
-    uint32_t ultimaInteracao = 0;
 
-    while (1) {
-        estado_atual = (bool) HT_GPIO_PinRead(BUTTON_INSTANCE, BUTTON_PIN);
 
-        if (estado_atual && !estado_anterior) {
-            total_cliques++;
-            ultimaInteracao = xTaskGetTickCount();
-            printf("Clique detectado! Total: %d\n", total_cliques);
+
+void uart_receive_cmd(void *pvParameters){
+    while(1) {
+        printf("Freq led 1 >>\n");
+        uint32_t idx = 0;
+        memset(rx_buffer, 0, sizeof(rx_buffer));
+
+        while(1){
+            HAL_USART_ReceivePolling(&huart1, controlByte, 1);
+                
+                if (controlByte[0] == '\n') {
+                    break;
+                }
+
+                if (idx < USART_BUFFER_SIZE - 1) {  // Evita ultrapassar os limites do buffer
+                    rx_buffer[idx++] = controlByte[0];
+                }
         }
+        rx_buffer[idx] = '\0';
+        printf("Valor de Freq ->: %s\n", (char *)rx_buffer);
+        
+        int nova_freq = atoi((char *)rx_buffer);
 
-        estado_anterior = estado_atual;
-
-        if (total_cliques > 0 && (xTaskGetTickCount() - ultimaInteracao > pdMS_TO_TICKS(2000))) {
-            xSemaphoreGive(xSemaforo); // Libera o semáforo para a tarefa do LED
+        if (xQueueSend(xFilaFrequencia, &nova_freq, portMAX_DELAY) == pdTRUE) {
+                printf("Frequência enviada para a fila: %d Hz\n", nova_freq);
+        } else {
+            printf("Falha ao enviar frequência para fila.\n");
         }
-
-        vTaskDelay(pdMS_TO_TICKS(20));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
-void vTaskLED(void *pvParameters) {
-    while (1) {
-        if (xSemaphoreTake(xSemaforo, portMAX_DELAY)) {
-            printf("Ativando LED com %d cliques\n", total_cliques);
+void Task1(void *pvParameters) {
+    bool button_state = false;
+    bool state_past = false;
 
-            for (int i = 0; i < total_cliques; i++) {
-                HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_ON);
-                vTaskDelay(pdMS_TO_TICKS(200));
-                HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, LED_OFF);
-                vTaskDelay(pdMS_TO_TICKS(200));
+    while (1) {
+      button_state = (bool) HT_GPIO_PinRead(BUTTON_INSTANCE, BUTTON_PIN);
+      if (button_state != state_past) {
+            if (button_state) {
+                printf("Botão pressionado. Liberando semáforo...\n");
+                xSemaphoreGive(xSemaforo);
+            }
+            state_past = button_state;
+      }
+      vTaskDelay(pdMS_TO_TICKS(100));      
+    }
+}
+
+void Task2(void *pvParameters) {
+   bool state = false;
+    int frequencia = 1;
+
+    while (1) {
+        // Espera por um novo valor de frequência na fila
+        if (xQueueReceive(xFilaFrequencia, &frequencia, portMAX_DELAY) == pdTRUE) {
+            printf("Frequência configurada para: %d Hz\n", frequencia);
+
+            if (frequencia == 0) {
+                // Desliga o LED e espera nova frequência
+                state = false;
+                HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, state);
+
+                while (1) {
+                    int nova_freq = 0;
+                    if (xQueueReceive(xFilaFrequencia, &nova_freq, portMAX_DELAY) == pdTRUE) {
+                        frequencia = nova_freq;
+                        printf("Frequência configurada para: %d Hz\n", frequencia);
+                        break;
+                    }
+                }
             }
 
-            total_cliques = 0; // Zera após piscar
+            // Piscar enquanto frequência > 0
+            while (frequencia > 0) {
+                state = !state;
+                HT_GPIO_WritePin(LED_GPIO_PIN, LED_INSTANCE, state);
+
+                int periodo_ms = 1000 / frequencia;
+                vTaskDelay(pdMS_TO_TICKS(periodo_ms / 2));
+
+                int nova_freq = 0;
+                if (xQueueReceive(xFilaFrequencia, &nova_freq, 0) == pdTRUE) {
+                    frequencia = nova_freq;
+                    printf("Frequência configurada para: %d Hz\n", frequencia);
+                    break;
+                }
+            }
         }
     }
 }
@@ -132,31 +135,35 @@ void vTaskLED(void *pvParameters) {
   \return
 */
 void main_entry(void) {
-    HT_GPIO_InitButton();
-    HT_GPIO_InitLed();
-    slpManNormalIOVoltSet(IOVOLT_3_30V);
-
-    xFila = xQueueCreate(10, sizeof(int));
-
-if (xFila == NULL)
-{
-  printf("erro ao criar a fila\n");
-  while(1);
-}
-
 
     HAL_USART_InitPrint(&huart1, GPR_UART1ClkSel_26M, uart_cntrl, 115200);
-    printf("Exemplo FreeRTOS-atividade 4\n");
+    
+    HT_GPIO_InitButton();
+    HT_GPIO_InitLed();
 
-    xTaskCreate(vTaskleitura, "Blink", 128, NULL, 1, NULL);
-    xTaskCreate(vTaskLED, "Print", 128, NULL, 1, NULL);
+    slpManNormalIOVoltSet(IOVOLT_3_30V);
+
+    xFilaFrequencia = xQueueCreate(5, sizeof(int));  // Fila de até 5 inteiros
+
+    if (xFilaFrequencia == NULL) {
+        printf("Erro ao criar a fila de frequências!\n");
+        while(1);
+    }
+
+    printf("Exemplo FreeRTOS\n");
+
+    //xTaskCreate(Task1, "Blink", 128, NULL, 2, NULL);
+    xTaskCreate(Task2, "Print", 128, NULL, 10, NULL);
+    xTaskCreate(uart_receive_cmd, "Uart_Rcv", 1024, NULL, 1, NULL);
 
     vTaskStartScheduler();
-    
+  
     printf("Nao deve chegar aqui.\n");
 
     while(1);
 
+    
+   
 }
 
 /******** HT Micron Semicondutores S.A **END OF FILE*/

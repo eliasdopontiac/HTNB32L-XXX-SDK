@@ -1,80 +1,42 @@
-2025-05-15 20:17:02,435 INFO     [FlashTop]    init
-2025-05-15 20:17:02,449 [Process-19568] INFO     [FlashTop]    do_main: cmd loadpara
-2025-05-15 20:17:02,449 [Process-19568] INFO     [Para]    exe path: C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug
-2025-05-15 20:17:02,453 [Process-19568] INFO     [Para]    update digest file :C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\cfg.digest, digest:b'\x68\x10\x41\x85\xc6\x9c\x10\x24\x84\xfb\xd0\xc0\x91\x0f\x33\xb8\xf1\x2c\xd4\x5b\x6c\x08\x7b\xfd\x49\x23\x44\xca\x60\x5e\xd3\xe3' 
-2025-05-15 20:17:02,454 [Process-19568] INFO     [Para]    LoadPara from cfgfile(C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\htnb32l.ini) 
-2025-05-15 20:17:02,455 [Process-19568] WARNING  [Para]    Load para curdigest b'\x68\x10\x41\x85\xc6\x9c\x10\x24\x84\xfb\xd0\xc0\x91\x0f\x33\xb8\xf1\x2c\xd4\x5b\x6c\x08\x7b\xfd\x49\x23\x44\xca\x60\x5e\xd3\xe3'
-2025-05-15 20:17:02,456 [Process-19568] INFO     [FlashTop]    Load para sync success
-2025-05-15 20:17:02,456 [Process-19568] INFO     [FlashToolCLI]    Burnbatch Start, burn imglist ['bootloader', 'system'].
-2025-05-15 20:17:02,456 [Process-19568] INFO     [FlashTop]    do_main: cmd burnag, Thread0[11444]
-2025-05-15 20:17:02,457 [Process-19568] INFO     [Thread0]    ProcessStart[11444]
-2025-05-15 20:17:03,585 [Process-19568] INFO     [Thread0]    ResetBoard(Normal Mod) finish
-2025-05-15 20:17:03,590 [Process-19568] INFO     [Thread0]    args.ser.port :COM3
-2025-05-15 20:17:03,691 [Process-19568] INFO     [Image]    SetBaud 921600
-2025-05-15 20:17:03,693 [Process-19568] INFO     [Thread0]    TryDownload C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\agentboot.bin start
-2025-05-15 20:17:03,693 [Process-19568] INFO     [Thread0]    image size=28568, hdsize=272
-2025-05-15 20:17:03,694 [Process-19568] INFO     [Thread0]    Preamble Send
-2025-05-15 20:17:03,750 [Process-19568] INFO     [Thread0]    Preamble Received Rsp
-2025-05-15 20:17:03,826 [Process-19568] INFO     [Thread0]    Preamble Send
-2025-05-15 20:17:03,934 [Process-19568] INFO     [Thread0]    Preamble Received Rsp
-2025-05-15 20:17:06,739 [Process-19568] INFO     [Thread0]    TryDownload agentboot success
-2025-05-15 20:17:06,747 [Process-19568] INFO     [Thread0]    agbaud: 921600
-2025-05-15 20:17:06,850 [Process-19568] INFO     [Thread0]    Burn OK!
-2025-05-15 20:17:06,851 [Process-19568] INFO     [Thread0]    ProcessEnd[11444]
-2025-05-15 20:17:06,851 [Process-19568] INFO     [FlashTop]    do_main: cmd burnone, Thread0[11444]
-2025-05-15 20:17:06,852 [Process-19568] INFO     [Thread0]    ProcessStart[11444]
-2025-05-15 20:17:06,862 [Process-19568] ERROR    [Image]    GetImageSize failed, src bin body path: C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\../Build/Slpman_Example/HTNB32L-XXX-Slpman_Example.bin does not exist
-2025-05-15 20:17:06,862 [Process-19568] INFO     [Thread0]    args.ser.port :COM3
-2025-05-15 20:17:06,961 [Process-19568] INFO     [Thread0]    agentboot is downloaded already
-2025-05-15 20:17:06,962 [Process-19568] INFO     [Thread0]    TryDownload agentboot skip
-2025-05-15 20:17:06,970 [Process-19568] INFO     [Thread0]    agbaud: 921600
-2025-05-15 20:17:07,068 [Process-19568] INFO     [Thread0]    LPC Preamble Send
-2025-05-15 20:17:07,125 [Process-19568] INFO     [Thread0]    LPC Preamble Received Rsp
-2025-05-15 20:17:07,155 [Process-19568] INFO     [Thread0]    LPCSetSyncStat(1)
-2025-05-15 20:17:07,156 [Process-19568] INFO     [Thread0]    LPCSyncDetect: success
-2025-05-15 20:17:07,156 [Process-19568] INFO     [Thread0]    DownloadBurnOne imgtype(bootloader)
-2025-05-15 20:17:07,157 [Process-19568] INFO     [Thread0]    DownloadBurnOne imgtype(bootloader), burnaddr(0x0), imgid(0x4f424d49)
-2025-05-15 20:17:07,157 [Process-19568] INFO     [Thread0]    DownloadBurnOne file C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\bootloader.bin 
-2025-05-15 20:17:07,159 [Process-19568] INFO     [Thread0]    TryDownload C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\bootloader.bin start
-2025-05-15 20:17:07,160 [Process-19568] INFO     [Thread0]    LPCBurnOneTrig start       			******
-2025-05-15 20:17:07,166 [Process-19568] INFO     [Thread0]    LPCBurnOneTrig success
-2025-05-15 20:17:07,167 [Process-19568] INFO     [Thread0]    DLDPreSync Preamble Send
-2025-05-15 20:17:07,726 [Process-19568] INFO     [Thread0]    DLDPreSync Preamble Received Rsp
-2025-05-15 20:17:07,757 [Process-19568] INFO     [Thread0]    image size=29248, hdsize=272
-2025-05-15 20:17:07,757 [Process-19568] INFO     [Thread0]    
-2025-05-15 20:17:07,758 [Process-19568] INFO     [Thread0]    imginfo.size=29248, RemainLen=29248, Offset=0
-2025-05-15 20:17:07,758 [Process-19568] INFO     [Thread0]    {bootloader.bin-percent files transferred   0%}
-2025-05-15 20:17:07,759 [Process-19568] INFO     [Thread0]    
-2025-05-15 20:17:07,759 [Process-19568] INFO     [Thread0]    Preamble Send
-2025-05-15 20:17:07,819 [Process-19568] INFO     [Thread0]    Preamble Received Rsp
-2025-05-15 20:17:07,868 [Process-19568] INFO     [Thread0]    imginfo.size=29248, RemainLen=28976, Offset=272
-2025-05-15 20:17:07,869 [Process-19568] INFO     [Thread0]    {bootloader.bin-percent files transferred   0%}
-2025-05-15 20:17:07,869 [Process-19568] INFO     [Thread0]    
-2025-05-15 20:17:07,870 [Process-19568] INFO     [Thread0]    Preamble Send
-2025-05-15 20:17:08,390 [Process-19568] INFO     [Thread0]    Preamble Received Rsp
-2025-05-15 20:17:08,904 [Process-19568] INFO     [Thread0]    imginfo.size=29248, RemainLen=0, Offset=272
-2025-05-15 20:17:08,905 [Process-19568] INFO     [Thread0]    {bootloader.bin-percent files transferred   100%}
-2025-05-15 20:17:08,906 [Process-19568] INFO     [Thread0]    
-2025-05-15 20:17:08,912 [Process-19568] INFO     [Thread0]    TryDownload success
-2025-05-15 20:17:08,916 [Process-19568] INFO     [Thread0]    Burn OK!
-2025-05-15 20:17:08,917 [Process-19568] INFO     [Thread0]    ProcessEnd[11444]
-2025-05-15 20:17:08,918 [Process-19568] INFO     [FlashTop]    do_main: cmd burnone, Thread0[11444]
-2025-05-15 20:17:08,918 [Process-19568] INFO     [Thread0]    ProcessStart[11444]
-2025-05-15 20:17:08,919 [Process-19568] ERROR    [Image]    GetImageSize failed, src bin body path: C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\../Build/Slpman_Example/HTNB32L-XXX-Slpman_Example.bin does not exist
-2025-05-15 20:17:08,920 [Process-19568] INFO     [Thread0]    args.ser.port :COM3
-2025-05-15 20:17:09,019 [Process-19568] INFO     [Thread0]    agentboot is downloaded already
-2025-05-15 20:17:09,019 [Process-19568] INFO     [Thread0]    TryDownload agentboot skip
-2025-05-15 20:17:09,026 [Process-19568] INFO     [Thread0]    agbaud: 921600
-2025-05-15 20:17:09,124 [Process-19568] INFO     [Thread0]    LPC Preamble Send
-2025-05-15 20:17:09,186 [Process-19568] INFO     [Thread0]    LPC Preamble Received Rsp
-2025-05-15 20:17:09,216 [Process-19568] INFO     [Thread0]    LPCSyncDetect: success
-2025-05-15 20:17:09,216 [Process-19568] INFO     [Thread0]    DownloadBurnOne imgtype(system)
-2025-05-15 20:17:09,217 [Process-19568] INFO     [Thread0]    DownloadBurnOne imgtype(system), burnaddr(0x0), imgid(0x444b4249)
-2025-05-15 20:17:09,217 [Process-19568] INFO     [Thread0]    DownloadBurnOne file C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\../Build/Slpman_Example/HTNB32L-XXX-Slpman_Example.bin 
-2025-05-15 20:17:09,218 [Process-19568] ERROR    [Image]    genimghd failed, src bin body path: C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\../Build/Slpman_Example/HTNB32L-XXX-Slpman_Example.bin does not exist
-2025-05-15 20:17:09,218 [Process-19568] ERROR    [Thread0]    Burn Failed(0x1000)
-2025-05-15 20:17:09,222 [Process-19568] ERROR    [FlashTop]    burn failed, ret=0x00001000, Thread0[11444]
-2025-05-15 20:17:09,222 [Process-19568] INFO     [Thread0]    ProcessEnd[11444]
-2025-05-15 20:17:09,223 [Process-19568] INFO     [FlashToolCLI]    Burnbatch Not Success
-2025-05-15 20:17:09,223 [Process-19568] ERROR    [FlashToolCLI]    
-[Error Info]:[file not exist] 
+2025-05-30 18:43:14,206 INFO     [FlashTop]    init
+2025-05-30 18:43:14,220 [Process-17612] INFO     [FlashTop]    do_main: cmd loadpara
+2025-05-30 18:43:14,220 [Process-17612] INFO     [Para]    exe path: C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug
+2025-05-30 18:43:14,225 [Process-17612] INFO     [Para]    update digest file :C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\cfg.digest, digest:b'\x68\x10\x41\x85\xc6\x9c\x10\x24\x84\xfb\xd0\xc0\x91\x0f\x33\xb8\xf1\x2c\xd4\x5b\x6c\x08\x7b\xfd\x49\x23\x44\xca\x60\x5e\xd3\xe3' 
+2025-05-30 18:43:14,225 [Process-17612] INFO     [Para]    LoadPara from cfgfile(C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\htnb32l.ini) 
+2025-05-30 18:43:14,226 [Process-17612] WARNING  [Para]    Load para curdigest b'\x68\x10\x41\x85\xc6\x9c\x10\x24\x84\xfb\xd0\xc0\x91\x0f\x33\xb8\xf1\x2c\xd4\x5b\x6c\x08\x7b\xfd\x49\x23\x44\xca\x60\x5e\xd3\xe3'
+2025-05-30 18:43:14,227 [Process-17612] INFO     [FlashTop]    Load para sync success
+2025-05-30 18:43:14,227 [Process-17612] INFO     [FlashToolCLI]    Burnbatch Start, burn imglist ['bootloader', 'system'].
+2025-05-30 18:43:14,228 [Process-17612] INFO     [FlashTop]    do_main: cmd burnag, Thread0[12788]
+2025-05-30 18:43:14,229 [Process-17612] INFO     [Thread0]    ProcessStart[12788]
+2025-05-30 18:43:15,367 [Process-17612] INFO     [Thread0]    ResetBoard(Normal Mod) finish
+2025-05-30 18:43:15,372 [Process-17612] INFO     [Thread0]    args.ser.port :COM3
+2025-05-30 18:43:15,473 [Process-17612] INFO     [Image]    SetBaud 921600
+2025-05-30 18:43:15,474 [Process-17612] INFO     [Thread0]    TryDownload C:\HTNB32L-XXX-SDK(-)\Firmware\HTNB32L-XXX-SDK\Debug\agentboot.bin start
+2025-05-30 18:43:15,475 [Process-17612] INFO     [Thread0]    image size=28568, hdsize=272
+2025-05-30 18:43:15,475 [Process-17612] INFO     [Thread0]    Preamble Send
+2025-05-30 18:43:15,529 [Process-17612] INFO     [Thread0]    Preamble Received Rsp
+2025-05-30 18:43:15,530 [Process-17612] ERROR    [Thread0]    Preamble Received Rsp err:000d0a45 
+2025-05-30 18:43:15,531 [Process-17612] INFO     [Thread0]    Preamble Received Rsp
+2025-05-30 18:43:15,532 [Process-17612] ERROR    [Thread0]    Preamble Received Rsp err:24a1a8cd 
+2025-05-30 18:43:15,533 [Process-17612] INFO     [Thread0]    Preamble Received Rsp
+2025-05-30 18:43:15,534 [Process-17612] ERROR    [Thread0]    Preamble Received Rsp err:85cd9581 
+2025-05-30 18:43:15,535 [Process-17612] INFO     [Thread0]    Preamble Received Rsp
+2025-05-30 18:43:15,536 [Process-17612] ERROR    [Thread0]    Preamble Received Rsp err:6c656570 
+2025-05-30 18:43:15,537 [Process-17612] INFO     [Thread0]    Preamble Received Rsp
+2025-05-30 18:43:15,538 [Process-17612] ERROR    [Thread0]    Preamble Received Rsp err:65726e61 
+2025-05-30 18:43:15,539 [Process-17612] INFO     [Thread0]    Preamble Received Rsp
+2025-05-30 18:43:15,540 [Process-17612] ERROR    [Thread0]    Preamble Received Rsp err:69626572 
+2025-05-30 18:43:15,541 [Process-17612] INFO     [Thread0]    Preamble Received Rsp
+2025-05-30 18:43:15,542 [Process-17612] ERROR    [Thread0]    Preamble Received Rsp err:61736520 
+2025-05-30 18:43:15,543 [Process-17612] INFO     [Thread0]    Preamble Received Rsp
+2025-05-30 18:43:15,544 [Process-17612] ERROR    [Thread0]    Preamble Received Rsp err:6f6e6720 
+2025-05-30 18:43:15,545 [Process-17612] INFO     [Thread0]    Preamble Received Rsp
+2025-05-30 18:43:15,546 [Process-17612] ERROR    [Thread0]    Preamble Received Rsp err:65703120 
+2025-05-30 18:43:15,578 [Process-17612] ERROR    [Thread0]    Download->DLDIdleProcess failed, ImageId=0x54494d48, ret=0x70
+2025-05-30 18:43:15,579 [Process-17612] ERROR    [Thread0]    TryDownload failed(0x70)
+2025-05-30 18:43:15,579 [Process-17612] ERROR    [Thread0]    DownloadAgent failed(0x70)
+2025-05-30 18:43:15,579 [Process-17612] INFO     [Thread0]    LPCTryRecover not allow
+2025-05-30 18:43:15,584 [Process-17612] ERROR    [FlashTop]    burn failed, ret=0x00000070, Thread0[12788]
+2025-05-30 18:43:15,584 [Process-17612] INFO     [Thread0]    ProcessEnd[12788]
+2025-05-30 18:43:15,585 [Process-17612] ERROR    [FlashToolCLI]    
+[Error Info]:[preamble no response] 
